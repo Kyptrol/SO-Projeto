@@ -20,7 +20,7 @@ int main () {
         return 1;
     }
 
-    Request req;
+    Request req; // Inicializa a estrutura Request para armazenar os dados lidos do pipe
     struct timeval start, end;
     int n = read (fd_req, &req, sizeof(Request)); // Lê a estrutura
     if (n == -1) {
