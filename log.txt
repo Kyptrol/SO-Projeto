@@ -1,0 +1,8 @@
+Utilizador: 1
+Comando executado: ls
+Tempo gasto: 0.004305 segundos
+
+Utilizador: 1
+Comando executado: ls
+Tempo gasto: 0.005255 segundos
+

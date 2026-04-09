@@ -37,23 +37,23 @@ Checklist:
     - command_id
     - command
 
-[ ] Enviar struct Request do runner para o controller
+[X] Enviar struct Request do runner para o controller
 
-[ ] Criar segundo pipe para resposta:
+[X] Criar segundo pipe para resposta:
     - tmp/pipe_res
 
-[ ] Implementar envio de autorização:
+[X] Implementar envio de autorização:
     - controller envia OK
     - runner espera resposta
 
-[ ] Implementar execução de comando:
+[X] Implementar execução de comando:
     - usar fork()
     - usar execvp()
     - usar wait()
 
-[ ] Implementar envio de mensagem de fim:
+[X] Implementar envio de mensagem de fim:
     - runner envia FINISHED
 
-[ ] Medir tempo com gettimeofday()
+[X] Medir tempo com gettimeofday()
 
-[ ] Guardar resultado em ficheiro log.txt
+[X] Guardar resultado em ficheiro log.txt
