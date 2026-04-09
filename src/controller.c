@@ -33,7 +33,6 @@ int main () {
     write (STDOUT_FILENO, req.command, strlen(req.command)); // Escreve o comando lido do pipe para a saída padrão (printf essencialmente)
 
 
-
     //-----------------------------------------------------Resposta-----------------------------------------------
     int fd_res = open("tmp/pipe_res", O_WRONLY); // Abre o pipe de resposta para escrita
     if (fd_res == -1) {
