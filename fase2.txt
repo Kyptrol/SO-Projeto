@@ -1,0 +1,39 @@
+FASE 2 — Gestão de fila e consulta de comandos
+
+Introdução:
+Nesta fase o controller passa a gerir múltiplos pedidos de execução.
+Os comandos devem ser colocados numa fila e executados por ordem.
+Também será implementada a consulta de comandos e o encerramento
+controlado do controller.
+
+Checklist:
+
+[ ] Criar estrutura de fila de comandos:
+    - lista ou array de Requests
+
+[ ] Guardar novos pedidos na fila
+
+[ ] Garantir execução FIFO (um comando de cada vez)
+
+[ ] Manter lista de comandos:
+    - em execução
+    - em espera
+
+[ ] Implementar opção -c no runner:
+    - enviar pedido de consulta
+    - receber lista de comandos
+
+[ ] Implementar resposta do controller:
+    - enviar lista formatada
+
+[ ] Mostrar lista no runner:
+    - comandos em execução
+    - comandos em espera
+
+[ ] Implementar opção -s no runner:
+    - enviar pedido de shutdown
+
+[ ] Garantir que controller só termina quando:
+    - não houver comandos em execução
+
+[ ] Testar vários runners ao mesmo tempo

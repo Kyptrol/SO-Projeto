@@ -1,0 +1,59 @@
+FASE 1 — Comunicação básica e execução de um comando
+
+Introdução:
+Nesta fase pretende-se criar a base do sistema com comunicação entre
+runner e controller usando named pipes (FIFO). O objetivo final é
+permitir que o runner envie um comando ao controller, receba autorização
+e execute o comando localmente.
+
+Checklist:
+
+[X] Criar a estrutura do projeto:
+    - src/
+    - include/
+    - obj/
+    - bin/
+    - tmp/
+
+[X] Colocar o Makefile na pasta principal
+
+[X] Criar ficheiros iniciais:
+    - src/controller.c
+    - src/runner.c
+
+[X] Implementar mkfifo no controller para criar o pipe:
+    - Exemplo: tmp/pipe_req
+
+[X] Testar criação do FIFO:
+    - Executar controller
+    - Confirmar com: ls tmp
+
+[X] Implementar comunicação simples:
+    - runner escreve mensagem
+    - controller lê mensagem
+
+[X] Criar estrutura Request:
+    - user_id
+    - command_id
+    - command
+
+[ ] Enviar struct Request do runner para o controller
+
+[ ] Criar segundo pipe para resposta:
+    - tmp/pipe_res
+
+[ ] Implementar envio de autorização:
+    - controller envia OK
+    - runner espera resposta
+
+[ ] Implementar execução de comando:
+    - usar fork()
+    - usar execvp()
+    - usar wait()
+
+[ ] Implementar envio de mensagem de fim:
+    - runner envia FINISHED
+
+[ ] Medir tempo com gettimeofday()
+
+[ ] Guardar resultado em ficheiro log.txt

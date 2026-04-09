@@ -1,0 +1,33 @@
+FASE 3 — Execução paralela e políticas de escalonamento
+
+Introdução:
+Nesta fase o controller passa a permitir múltiplos comandos em execução
+em paralelo. Deve ser implementada uma política de escalonamento e
+configuração do número máximo de comandos concorrentes.
+
+Checklist:
+
+[ ] Ler argumentos do controller:
+    - parallel-commands
+    - sched-policy
+
+[ ] Implementar controlo de paralelismo:
+    - permitir N comandos ao mesmo tempo
+
+[ ] Criar contador de processos ativos
+
+[ ] Implementar execução paralela:
+    - fork múltiplos processos
+
+[ ] Implementar política de escalonamento:
+    - FIFO (mínimo obrigatório)
+
+[ ] (Opcional) Implementar outras políticas:
+    - Round Robin
+    - Prioridades
+
+[ ] Garantir justiça entre utilizadores
+
+[ ] Testar múltiplos runners simultâneos
+
+[ ] Verificar que limite de paralelismo é respeitado

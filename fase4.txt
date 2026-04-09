@@ -1,0 +1,41 @@
+FASE 4 — Suporte a pipes e redirecionamento
+
+Introdução:
+Nesta fase o runner passa a suportar comandos mais complexos,
+incluindo redirecionamento de ficheiros e pipes entre comandos.
+Também devem ser realizados testes experimentais para avaliar
+o desempenho do sistema.
+
+Checklist:
+
+[ ] Implementar parsing do comando recebido
+
+[ ] Suportar redirecionamentos:
+    - >
+    - 2>
+    - <
+
+[ ] Suportar pipes:
+    - |
+
+[ ] Criar múltiplos processos para pipes
+
+[ ] Redirecionar stdin/stdout corretamente
+
+[ ] Testar comandos com pipes:
+    - grep | wc
+
+[ ] Testar redirecionamentos:
+    - > ficheiro.txt
+
+[ ] Criar scripts de teste em bash
+
+[ ] Executar testes com múltiplos runners
+
+[ ] Comparar diferentes políticas de escalonamento
+
+[ ] Registar resultados:
+    - tabelas
+    - gráficos
+
+[ ] Escrever relatório final
