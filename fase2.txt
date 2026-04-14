@@ -8,12 +8,12 @@ controlado do controller.
 
 Checklist:
 
-[ ] Criar estrutura de fila de comandos:
+[X] Criar estrutura de fila de comandos:
     - lista ou array de Requests
 
-[ ] Guardar novos pedidos na fila
+[X] Guardar novos pedidos na fila
 
-[ ] Garantir execução FIFO (um comando de cada vez)
+[X] Garantir execução FIFO (um comando de cada vez)
 
 [ ] Manter lista de comandos:
     - em execução

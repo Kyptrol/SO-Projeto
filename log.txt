@@ -1,0 +1,4 @@
+Utilizador: 0
+Comando executado: Controller Shutdown
+Tempo gasto: 15.004081 segundos
+
