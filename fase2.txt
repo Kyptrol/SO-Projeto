@@ -30,10 +30,10 @@ Checklist:
     - comandos em execução
     - comandos em espera
 
-[ ] Implementar opção -s no runner:
+[X] Implementar opção -s no runner:
     - enviar pedido de shutdown
 
-[ ] Garantir que controller só termina quando:
+[X] Garantir que controller só termina quando:
     - não houver comandos em execução
 
-[ ] Testar vários runners ao mesmo tempo
+[X] Testar vários runners ao mesmo tempo

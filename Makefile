@@ -8,10 +8,10 @@ runner: bin/runner
 folders:
 	@mkdir -p src include obj bin tmp
 
-bin/controller: obj/controller.o
+bin/controller: obj/controller.o obj/common.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
-bin/runner: obj/runner.o
+bin/runner: obj/runner.o obj/common.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
 obj/%.o: src/%.c

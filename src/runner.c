@@ -7,24 +7,7 @@
 #include "runner.h"
 #include <string.h>
 #include <sys/wait.h>
-
-void pede_terminacao_controller() {
-    int fd_req = open("tmp/pipe_req", O_WRONLY); // Abre o pipe para escrita
-    if (fd_req == -1) {
-        perror("Erro ao abrir o pipe");
-        return;
-    }
-
-    Request req;
-    req.user_id = 0; // User_id 0 para indicar que é um pedido de terminação
-    req.command_id = 0; // Command_id 0 para indicar que é um pedido de terminação
-    strcpy(req.command, "Controller Shutdown"); // Comando de terminação
-    req.status = 3; // Status 3 para indicar que é um pedido de terminação
-
-    write(fd_req, &req, sizeof(Request)); // Envia o Request pelo pipe
-
-    close(fd_req); // Fecha o pipe
-}
+#include "common.h"
 
 int main (int argc, char *argv[]) {
 
@@ -58,7 +41,7 @@ int main (int argc, char *argv[]) {
         write (fd_req, &req, sizeof(Request)); // Envia o Request pelo pipe
     
         //-----------------------------------------------------Resposta----------------------------------------------
-        int fd_res_this_pipe_reply = open(req.reply_pipe, O_RDONLY); // Abre o pipe de resposta específico para este comando para leitura
+        int fd_res_this_pipe_reply = open(req.reply_pipe, O_RDONLY); // Abre um pipe específico para receber a resposta
         if (fd_res_this_pipe_reply == -1) {
             perror("Erro ao abrir o pipe de resposta");
             return 1;
@@ -99,7 +82,7 @@ int main (int argc, char *argv[]) {
                     req.status = 2; // Define o status como 2 (concluída)
                 }
                 printf("[runner] command %d finished.\n", req.command_id); // Imprime uma mensagem de status no console
-                write(fd_req, &req, sizeof(Request)); // Escreve o status atualizado de volta no pipe de pedido para que o controller possa atualizar o status do comando
+                write(fd_req, &req, sizeof(Request)); // Envia o status a dizer que o comando foi concluído
             }
         } else {
             printf("Erro na execução do comando: %s\n", buffer);
@@ -108,6 +91,7 @@ int main (int argc, char *argv[]) {
     
         close(fd_req); // Fecha o pipe
         close(fd_res_this_pipe_reply); // Fecha o pipe de resposta
+        unlink(req.reply_pipe); // Remove o pipe de resposta específico para este comando
 
     } else if (strcmp(argv[1], "-c") == 0) { // Consultar comandos em execução    
         printf("Modo de listagem não implementado ainda.\n");
@@ -116,10 +100,10 @@ int main (int argc, char *argv[]) {
             fprintf(stderr, "Uso: %s -s\n", argv[0]);
             return 1;
         }
-        pede_terminacao_controller();
+        runner_pede_terminacao_controller(); // Chama a função para pedir a terminação do controller
     } else {
         if (argc != 2) { // Verifica se o número de argumentos é diferente de 2 (programa, modo de utilização)
-            fprintf(stderr, "Uso: %s -c\n", argv[0]);
+            fprintf(stderr, "Uso: %s -c\n ou %s -s\n ou %s -e\n", argv[0], argv[0], argv[0]);
             return 1;
         }
         fprintf(stderr, "Modo de utilização inválido. Use -e para execução, -c para consulta ou -s para terminação.\n");

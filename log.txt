@@ -1,4 +1,12 @@
-Utilizador: 0
-Comando executado: Controller Shutdown
-Tempo gasto: 15.004081 segundos
+Utilizador: 1
+Comando executado: sleep 10
+Tempo gasto: 10.001537 segundos
+
+Utilizador: 1
+Comando executado: sleep 8
+Tempo gasto: 8.004140 segundos
+
+Utilizador: 1
+Comando executado: ls
+Tempo gasto: 0.004558 segundos
 
