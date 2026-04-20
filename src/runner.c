@@ -94,7 +94,11 @@ int main (int argc, char *argv[]) {
         unlink(req.reply_pipe); // Remove o pipe de resposta específico para este comando
 
     } else if (strcmp(argv[1], "-c") == 0) { // Consultar comandos em execução    
-        printf("Modo de listagem não implementado ainda.\n");
+        if (argc != 2){
+            fprintf(stderr, "Uso: %s -c\n", argv[0]);
+            return 1;
+        }
+        runner_pede_consulta_controller(); // Envia pedido de consulta ao controller e imprime a lista de comandos em execução e em espera
     } else if (strcmp(argv[1], "-s") == 0) { // Pede a terminação do programa controller
         if (argc != 2) { // Verifica se o número de argumentos é diferente de 2 (programa, modo de utilização)
             fprintf(stderr, "Uso: %s -s\n", argv[0]);

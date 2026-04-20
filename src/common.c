@@ -57,6 +57,34 @@ void runner_pede_terminacao_controller() {
     unlink(req.reply_pipe); // Remove o pipe de resposta específico para este comando
 }
 
+void runner_pede_consulta_controller() {
+    int fd_req = open("tmp/pipe_req", O_WRONLY); // abre o pipe principal para escrita
+
+    Request req;
+    req.command_id = getpid(); // usa o pid como id único do pedido
+    strcpy(req.command, "List Query");
+    req.status = 4; // status 4 = pedido de consulta (novo)
+    
+    snprintf(req.reply_pipe, sizeof(req.reply_pipe),
+             "tmp/pipe_res_%d", req.command_id);// cria nome único para o pipe de resposta
+    
+    mkfifo(req.reply_pipe, 0666);// cria o pipe de resposta
+
+    write(fd_req, &req, sizeof(Request));// envia o pedido ao controller
+
+    int fd_res = open(req.reply_pipe, O_RDONLY); // abre o pipe de resposta para leitura
+
+    char buffer[4096];
+    int n = read(fd_res, buffer, sizeof(buffer) - 1); // lê a lista enviada pelo controller
+    if (n > 0) {
+        buffer[n] = '\0';
+        printf("%s", buffer); // imprime a lista no terminal do runner
+    }
+
+    close(fd_res);
+    close(fd_req);
+    unlink(req.reply_pipe);// remove o pipe temporário de resposta
+}
 
 int substitui_comando_no_array (Request req_arr[], int size, Request req) { // Função para verificar se um command_id específico está presente no array de Request
     for (int i = 0; i < size; i++) { // Loop para percorrer o array de Request
@@ -92,5 +120,41 @@ int controller_envia_Ok_para_runner(Request req) { // Função para enviar a men
     }
     write(fd_res_this_pipe_reply, msg_Ok, strlen(msg_Ok)); // Envia a mensagem de resposta Ok pelo pipe
     close(fd_res_this_pipe_reply); // Fecha o pipe de resposta após enviar a mensagem
+    return 0;
+}
+
+int controller_envia_lista_para_runner(Request req, Request req_arr[],
+                                        int query_size, int comando_em_execucao) {
+    char buffer[4096];
+    buffer[0] = '\0';
+    char linha[512];
+
+    strcat(buffer, " Comandos em execução \n");
+    for (int i = 0; i < query_size; i++) {
+        if (req_arr[i].status == 1) { // status 1 = em execução
+            snprintf(linha, sizeof(linha),
+                     "  [ID: %d] [user: %d] %s\n",
+                     req_arr[i].command_id,
+                     req_arr[i].user_id,
+                     req_arr[i].command);
+            strcat(buffer, linha);  // adiciona à resposta
+        }
+    }
+
+    strcat(buffer, " Comandos em espera \n");
+    for (int i = 0; i < query_size; i++) {
+        if (req_arr[i].status == 0) { // status 0 = pendente ou em espera
+            snprintf(linha, sizeof(linha),
+                     "  [ID: %d] [user: %d] %s\n",
+                     req_arr[i].command_id,
+                     req_arr[i].user_id,
+                     req_arr[i].command);
+            strcat(buffer, linha); 
+        }
+    }
+
+    int fd_res = open(req.reply_pipe, O_WRONLY);// abre o pipe de resposta do runner -c
+    write(fd_res, buffer, strlen(buffer)); // envia a lista ao runner
+    close(fd_res);
     return 0;
 }

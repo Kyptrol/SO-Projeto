@@ -47,6 +47,11 @@ int main () {
             if (req.status == 3) indice_comando_terminal = query_size; // Se este comando for o pedido de terminação, guarda o índice 
             req_arr[query_size++] = req; // Armazena a estrutura lida no array de Request
         }
+        // é imediato , nao entra na fila
+        if (req.status == 4) {
+            controller_envia_lista_para_runner(req, req_arr, query_size, comando_em_execucao);
+            continue; // volta ao inicio do loop
+        }
 
         if (running == 1 && req_arr[comando_em_execucao].status == 2) { // Lógica para quando um comando em execução é concluído (status 2)
             running = 0; 
