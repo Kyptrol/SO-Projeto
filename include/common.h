@@ -10,11 +10,13 @@ typedef struct {
 } Request;
 
 void runner_pede_terminacao_controller();
+void runner_pede_consulta_controller();
 
 int substitui_comando_no_array (Request req_arr[], int size, Request req);
 
 int escrever_no_log(Request req, double tempo_gasto);
 
 int controller_envia_Ok_para_runner(Request req);
+int controller_envia_lista_para_runner(Request req, Request req_arr[], int query_size, int comando_em_execucao);
 
 #endif 
