@@ -15,18 +15,18 @@ Checklist:
 
 [X] Garantir execução FIFO (um comando de cada vez)
 
-[ ] Manter lista de comandos:
+[X] Manter lista de comandos:
     - em execução
     - em espera
 
-[ ] Implementar opção -c no runner:
+[X] Implementar opção -c no runner:
     - enviar pedido de consulta
     - receber lista de comandos
 
-[ ] Implementar resposta do controller:
+[X] Implementar resposta do controller:
     - enviar lista formatada
 
-[ ] Mostrar lista no runner:
+[X] Mostrar lista no runner:
     - comandos em execução
     - comandos em espera
 
