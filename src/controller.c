@@ -12,7 +12,7 @@
 #include "common.h"
 
 
-
+ // teste
 int main () {
 
     mkfifo("tmp/pipe_req", 0666); // Cria o pipe chamado "pipe" com permissões de leitura e escrita para todos os usuários
