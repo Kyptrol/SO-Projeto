@@ -12,8 +12,8 @@
 #include "common.h"
 
 
- // teste
-int main () {
+
+int main (int argc, char *argv[]) {
 
     mkfifo("tmp/pipe_req", 0666); // Cria o pipe chamado "pipe" com permissões de leitura e escrita para todos os usuários
 
@@ -41,16 +41,15 @@ int main () {
             close(fd_req);
             return 1;
         }
-
+        // é imediato , nao entra na fila
+        if (req.status == 4) { // status 4 para indicar que é um pedido de consulta da lista de comandos
+            controller_envia_lista_para_runner(req, req_arr, query_size, comando_em_execucao);
+            continue; // Volta para o início do loop para ler o próximo comando do pipe
+        }
         substitui_req = substitui_comando_no_array(req_arr, query_size, req); // Verifica se o command_id do comando lido do pipe já está presente no array de Request e substitui se encontrado
         if (!substitui_req && !shutdown_pedido) { // Verifica se o comando lido do pipe já existe e se o pedido de terminação do controller já foi recebido
             if (req.status == 3) indice_comando_terminal = query_size; // Se este comando for o pedido de terminação, guarda o índice 
             req_arr[query_size++] = req; // Armazena a estrutura lida no array de Request
-        }
-        // é imediato , nao entra na fila
-        if (req.status == 4) {
-            controller_envia_lista_para_runner(req, req_arr, query_size, comando_em_execucao);
-            continue; // volta ao inicio do loop
         }
 
         if (running == 1 && req_arr[comando_em_execucao].status == 2) { // Lógica para quando um comando em execução é concluído (status 2)

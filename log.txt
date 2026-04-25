@@ -1,12 +1,12 @@
 Utilizador: 1
-Comando executado: sleep 10
-Tempo gasto: 10.001537 segundos
-
-Utilizador: 1
-Comando executado: sleep 8
-Tempo gasto: 8.004140 segundos
-
-Utilizador: 1
 Comando executado: ls
-Tempo gasto: 0.004558 segundos
+Tempo gasto: 0.006014 segundos
+
+Utilizador: 2
+Comando executado: sleep 2
+Tempo gasto: 2.004320 segundos
+
+Utilizador: 3
+Comando executado: date
+Tempo gasto: 0.003855 segundos
 
