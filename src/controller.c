@@ -15,6 +15,20 @@
 
 int main (int argc, char *argv[]) {
 
+    int parallel_commands = 1;
+    // lê por FIFO
+    char sched_policy[32] = "FIFO";
+
+    for (int i = 1; i < argc - 1; i++) {
+        if (strcmp(argv[i], "parallel-commands") == 0)
+            parallel_commands = atoi(argv[i + 1]); // lê o nº máximo de comandos paralelos
+        if (strcmp(argv[i], "sched-policy") == 0)
+            strncpy(sched_policy, argv[i + 1], sizeof(sched_policy) - 1); // lê a política de escalonamento
+    }
+
+    printf("[controller] parallel-commands: %d\n", parallel_commands);
+    printf("[controller] sched-policy: %s\n", sched_policy);
+
     mkfifo("tmp/pipe_req", 0666); // Cria o pipe chamado "pipe" com permissões de leitura e escrita para todos os usuários
 
     Request req_arr[100]; // Declara um array de estruturas Request para armazenar os dados lidos do pipe
@@ -26,10 +40,9 @@ int main (int argc, char *argv[]) {
     }
 
     int query_size = 0; // Variável para controlar o tamanho do array de Request
-    int running = 0; // Variável para controlar se o processo está executando um comando ou não
-    int comando_em_execucao = 0; // Variável para armazenar o índice do comando em execução no array de Request
+    int running = 0; // Variável para contar os processos ativos
     int substitui_req = 0; // Variável para controlar se o comando lido do pipe corresponde a um command_id já armazenado no array de Request e substitui no array se encontrado
-    struct timeval start, end; // Variáveis para armazenar o tempo de início e término da execução do comando
+    struct timeval start_times[100]; // Variáveis para armazenar o tempo de início e término da execução do comando
     int shutdown_pedido = 0; // Variável para controlar se o pedido de terminação do controller foi recebido
     int indice_comando_terminal = 0; // Variável para armazenar o índice do comando de terminação do controller no array de Request
 
@@ -52,22 +65,36 @@ int main (int argc, char *argv[]) {
             req_arr[query_size++] = req; // Armazena a estrutura lida no array de Request
         }
 
-        if (running == 1 && req_arr[comando_em_execucao].status == 2) { // Lógica para quando um comando em execução é concluído (status 2)
-            running = 0; 
-            gettimeofday(&end, NULL); // Marca o tempo de término da execução do comando
-            double elapsed = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0; // Calcula o tempo decorrido em segundos
-            escrever_no_log(req_arr[comando_em_execucao], elapsed); // Escreve no arquivo de log o comando executado e o tempo gasto
-            comando_em_execucao++; // Incrementa o índice do comando em execução para o próximo comando no array
+        // FASE 3: quando um comando termina, encontra-o pelo command_id, escreve log e decrementa contador
+        if (req.status == 2) {
+            for (int i = 0; i < query_size; i++) {
+                if (req_arr[i].command_id == req.command_id && req_arr[i].status == 2) {
+                    struct timeval end;
+                    gettimeofday(&end, NULL); // Marca o tempo de término da execução do comando
+                    double elapsed = (end.tv_sec  - start_times[i].tv_sec)
+                                    +(end.tv_usec - start_times[i].tv_usec) / 1000000.0; // Calcula o tempo decorrido em segundos
+                    escrever_no_log(req_arr[i], elapsed); // Escreve no arquivo de log o comando executado e o tempo gasto
+                    running--; // Decrementa o contador de processos ativos
+                    break;
         }
-        if (running == 0 && req_arr[comando_em_execucao].status == 0 && comando_em_execucao < query_size) { // Lógica para quando não há comando em execução e o próximo está pendente (status 0)
-            running = 1; // Define a variável running como 1 para indicar que um comando está sendo executado
-            gettimeofday(&start, NULL); // Marca o tempo de início da execução do comando
-            controller_envia_Ok_para_runner(req_arr[comando_em_execucao]); // Envia a mensagem de resposta Ok para o runner para indicar que o comando pode ser executado
-        }
+    }
+}
+
+// FASE 3: percorre a fila por ordem (FIFO) e lança pendentes até ao limite N
+        for (int i = 0; i < query_size; i++) {
+            if (running >= parallel_commands) break; // Para quando atingir o limite de paralelismo
+            if (req_arr[i].status == 0) { // Comando pendente
+                running++; // Incrementa o contador de processos ativos
+                gettimeofday(&start_times[i], NULL); // Marca o tempo de início da execução do comando
+                controller_envia_Ok_para_runner(req_arr[i]); // Envia Ok para o runner para indicar que o comando pode ser executado
+    }
+}
+
+  
         if (req.status == 3 && !shutdown_pedido) { // Dizer que foi pedido a terminação do controller (status 3)
             shutdown_pedido = 1; // Define a variável shutdown_pedido como 1 para indicar que o pedido de terminação do controller foi recebido
         }
-        if (shutdown_pedido && running == 0 && comando_em_execucao >= query_size - 1) { // Se foi pedido terminação, não há nada a correr e o comando que acabou de ser executado é o último do array
+        if (shutdown_pedido && running == 0) { // Se foi pedido terminação, não há nada a correr e o comando que acabou de ser executado é o último do array
             controller_envia_Ok_para_runner(req_arr[indice_comando_terminal]); // Envia a mensagem de resposta Ok para o runner para indicar que o controller vai encerrar
             break; // Sai do loop para encerrar o runner
         }
