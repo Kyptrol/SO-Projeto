@@ -7,19 +7,19 @@ configuração do número máximo de comandos concorrentes.
 
 Checklist:
 
-[ ] Ler argumentos do controller:
+[X] Ler argumentos do controller:
     - parallel-commands
     - sched-policy
 
-[ ] Implementar controlo de paralelismo:
+[X] Implementar controlo de paralelismo:
     - permitir N comandos ao mesmo tempo
 
-[ ] Criar contador de processos ativos
+[X] Criar contador de processos ativos
 
-[ ] Implementar execução paralela:
+[X] Implementar execução paralela:
     - fork múltiplos processos
 
-[ ] Implementar política de escalonamento:
+[X] Implementar política de escalonamento:
     - FIFO (mínimo obrigatório)
 
 [ ] (Opcional) Implementar outras políticas:
