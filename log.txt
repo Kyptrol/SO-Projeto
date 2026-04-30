@@ -10,3 +10,19 @@ Utilizador: 3
 Comando executado: date
 Tempo gasto: 0.003855 segundos
 
+Utilizador: 1
+Comando executado: sleep 5
+Tempo gasto: 5.013532 segundos
+
+Utilizador: 2
+Comando executado: sleep 5
+Tempo gasto: 5.013498 segundos
+
+Utilizador: 3
+Comando executado: sleep 5
+Tempo gasto: 5.015260 segundos
+
+Utilizador: 1
+Comando executado: sleep 10
+Tempo gasto: 10.012854 segundos
+

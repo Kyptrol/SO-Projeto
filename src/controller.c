@@ -56,7 +56,7 @@ int main (int argc, char *argv[]) {
         }
         // é imediato , nao entra na fila
         if (req.status == 4) { // status 4 para indicar que é um pedido de consulta da lista de comandos
-            controller_envia_lista_para_runner(req, req_arr, query_size, comando_em_execucao);
+            controller_envia_lista_para_runner(req, req_arr, query_size, running);
             continue; // Volta para o início do loop para ler o próximo comando do pipe
         }
         substitui_req = substitui_comando_no_array(req_arr, query_size, req); // Verifica se o command_id do comando lido do pipe já está presente no array de Request e substitui se encontrado
