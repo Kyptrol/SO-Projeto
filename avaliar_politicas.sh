@@ -3,9 +3,14 @@
 # tem que se fzer chmod +x avaliar_politicas.sh, para dar permissão de execução ao script
 # adicionar tempo por user para ver como as politicas afetam cada user individualmente
 
-REPORT="avaliacao_politicas.txt"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RESULTADOS_DIR="$SCRIPT_DIR/resultados"
+REPORT="$RESULTADOS_DIR/avaliacao_politicas.txt"
 controller_pid=""
 LAST_PID=""
+
+mkdir -p "$RESULTADOS_DIR"
+cd "$SCRIPT_DIR" || exit 1
 
 cleanup() {
 	if [ -n "$controller_pid" ]; then

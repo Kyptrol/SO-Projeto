@@ -2,9 +2,14 @@
 # Cenário pensado para evidenciar diferenças entre FIFO, RANDOM e FAIR
 # quando alguns utilizadores submetem poucos jobs e outros muitos.
 
-REPORT="avaliacao_politicas2.txt"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RESULTADOS_DIR="$SCRIPT_DIR/resultados"
+REPORT="$RESULTADOS_DIR/avaliacao_politicas2.txt"
 controller_pid=""
 LAST_PID=""
+
+mkdir -p "$RESULTADOS_DIR"
+cd "$SCRIPT_DIR" || exit 1
 
 cleanup() {
 	if [ -n "$controller_pid" ]; then
